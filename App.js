@@ -21,7 +21,7 @@ const TabNavigator = createBottomTabNavigator({
 },
 {
   defaultNavigationOptions: ({navigation})=>({
-    tabBarIcon: ({})=>{
+    tabBarIcon: ()=>{
       const routeName = navigation.state.routeName;
       if(routeName === "Transaction"){
         return(
