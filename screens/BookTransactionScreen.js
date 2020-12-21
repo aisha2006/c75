@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View,TouchableOpacity,Image,TextInput, Alert } from 'react-native';
+import { StyleSheet, Text, View,TouchableOpacity,Image,TextInput, Alert,KeyboardAvoidingView, ToastAndroid } from 'react-native';
 import * as Permissions from 'expo-permissions'
 import {BarCodeScanner} from 'expo-barcode-scanner'
 import * as firebase from 'firebase';
@@ -106,11 +106,13 @@ export default class BookTransactionScreen extends React.Component{
         if(book.bookAvailability){
           this.initiateBookIssue();
           transactionMessage = 'Book Issued';
+          ToastAndroid.show(transactionMessage,ToastAndroid.SHORT);
         }
 
         else{
           this.initiateBookReturn();
           transactionMessage = "Book Returned";
+          ToastAndroid.show(transactionMessage,ToastAndroid.SHORT);       
         }
         
          this.setState({transactionMessage:transactionMessage});
@@ -135,7 +137,7 @@ export default class BookTransactionScreen extends React.Component{
 
       else if(ButtonState==='normal'){
         return(
-        <View style={styles.container}>
+        <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
             <View>
                 <Image
                 source={require("../assets/booklogo.jpg")}
@@ -148,6 +150,7 @@ export default class BookTransactionScreen extends React.Component{
                 <TextInput
                 style={styles.inputBox}
                 placeholder= "Book ID"
+                onChangeText = {text => this.setState({scannedBookId: text})}
                 value={this.state.scannedBookId}
                 />
                 <TouchableOpacity 
@@ -165,6 +168,7 @@ export default class BookTransactionScreen extends React.Component{
                 <TextInput
                 style={styles.inputBox}
                 placeholder= "Student ID"
+                onChangeText={text=>this.setState({scannedStudentId: text})}
                 value={this.state.scannedStudentId}
                 />
                 <TouchableOpacity 
@@ -178,11 +182,12 @@ export default class BookTransactionScreen extends React.Component{
             </View>
             
             <TouchableOpacity style={styles.submitButton} onPress={async()=>{
-              await this.handleTransaction();
+              var transactionMessage=this.handleTransaction();
+              this.setState({scannedStudentId:'',scannedBookId:''});
             }}>
               <Text style={styles.submitButtonText}>Submit</Text>
             </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
       
       );
     }
